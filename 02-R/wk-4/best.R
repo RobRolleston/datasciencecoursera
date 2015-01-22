@@ -18,8 +18,18 @@ best <- function(state, outcome) {
   } 
 
 	# Read the outcome data
-  data <- read.csv("outcome-of-care-measures.csv")
+  library(dplyr)
+  # http://stackoverflow.com/questions/22028937/how-can-i-tell-select-in-dplyr-that-the-string-it-is-seeing-is-a-column-name-i 
+  # https://github.com/hadley/dplyr/issues/333 
+  
+  data <- tbl_df(read.csv("outcome-of-care-measures.csv", stringsAsFactors = FALSE)) %>%
+    filter(State == state) %>%
+    select(Hospital.Name, get(cause))
+  #data[,"Hospital.Name"] <- as.character(data[,"Hospital.Name"])
+  data[,cause] <- as.numeric(data[[ , cause]])
+  #data$Hospital.Name <- as.character(data$Hospital.Name)
+  data <-   arrange(data, data[[cause]], Hospital.Name)
 	
 	## Return hospital name in that state with the lowest 30-day death rate
-	
+	as.character(data[[1,"Hospital.Name"]])
 }
