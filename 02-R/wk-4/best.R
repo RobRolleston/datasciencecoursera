@@ -21,6 +21,7 @@ best <- function(state, outcome) {
   library(dplyr)
   # http://stackoverflow.com/questions/22028937/how-can-i-tell-select-in-dplyr-that-the-string-it-is-seeing-is-a-column-name-i 
   # https://github.com/hadley/dplyr/issues/333 
+  # http://stackoverflow.com/questions/14984989/how-to-avoid-warning-when-introducing-nas-by-coercion
   
   data <- tbl_df(read.csv("outcome-of-care-measures.csv", stringsAsFactors = FALSE)) %>%
     filter(State == state) %>%
@@ -28,7 +29,7 @@ best <- function(state, outcome) {
   #data[,"Hospital.Name"] <- as.character(data[,"Hospital.Name"])
   #data$Hospital.Name <- as.character(data$Hospital.Name)
   #data[,cause] <- as.numeric(data[[ , cause]])
-  data[,2] <- as.numeric(unlist(data[,2]))
+  data[,2] <- suppressWarnings(as.numeric(unlist(data[,2])))
   data <-   arrange(data, data[[cause]], Hospital.Name)
 	
 	## Return hospital name in that state with the lowest 30-day death rate

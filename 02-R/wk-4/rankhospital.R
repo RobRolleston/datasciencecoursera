@@ -18,9 +18,30 @@ rankhospital <- function(state, outcome, num = "best") {
   } 
    
   # Read the outcome data
-  data <- read.csv("outcome-of-care-measures.csv")
+  data <- tbl_df(read.csv("outcome-of-care-measures.csv", stringsAsFactors = FALSE)) %>%
+    filter(State == state) %>%
+    select(Hospital.Name, get(cause))
+  data[,2] <- suppressWarnings(as.numeric(unlist(data[,2])))
+  if (num == "worst") {
+    data <-   arrange(data, desc(data[[cause]]), Hospital.Name)
+    position <- 1
+  } else if (num == "best"){
+    data <-   arrange(data, data[[cause]], Hospital.Name)
+    position <- 1
+  } else {
+    data <-   arrange(data, data[[cause]], Hospital.Name)
+    position <- num
+  }
 	
 	## Return hospital name in that state with the given rank
 	## 30-day death rate
+  if (position > 0 & position <= nrow(data)) {
+    data[[position,"Hospital.Name"]]
+  } else {
+    NA
+  }
+    
+
+  
 	
 }
