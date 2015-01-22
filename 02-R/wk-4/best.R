@@ -26,8 +26,9 @@ best <- function(state, outcome) {
     filter(State == state) %>%
     select(Hospital.Name, get(cause))
   #data[,"Hospital.Name"] <- as.character(data[,"Hospital.Name"])
-  data[,cause] <- as.numeric(data[[ , cause]])
   #data$Hospital.Name <- as.character(data$Hospital.Name)
+  #data[,cause] <- as.numeric(data[[ , cause]])
+  data[,2] <- as.numeric(unlist(data[,2]))
   data <-   arrange(data, data[[cause]], Hospital.Name)
 	
 	## Return hospital name in that state with the lowest 30-day death rate
