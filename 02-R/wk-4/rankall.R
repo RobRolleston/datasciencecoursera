@@ -14,7 +14,10 @@ rankall <- function(outcome, num = "best") {
   }
  
   # Read the outcome data
-  data <- read.csv("outcome-of-care-measures.csv")
+  data <- tbl_df(read.csv("outcome-of-care-measures.csv", stringsAsFactors = FALSE)) %>%
+    select(State, Hospital.Name, get(cause))
+  data[,3] <- suppressWarnings(as.numeric(unlist(data[,3])))
+  data <- na.omit(data)
 	
 	## For each state, find the hospital of the given rank
 	
